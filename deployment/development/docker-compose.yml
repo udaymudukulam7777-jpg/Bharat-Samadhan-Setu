@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: ../deployment/docker/backend.Dockerfile
+    container_name: jharkhand_dev_backend
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=True
+      - AI_MODE=mock
+      - DATABASE_URL=sqlite:///./jharkhand_samadhan.db
+      - JWT_SECRET=jharkhand_sih_2026_super_secret_jwt_key_998877
+    volumes:
+      - ../../backend:/app
+      - ../../uploads:/app/uploads
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: ../deployment/docker/frontend.Dockerfile
+    container_name: jharkhand_dev_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend

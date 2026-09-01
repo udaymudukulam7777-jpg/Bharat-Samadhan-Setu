@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
+    container_name: jharkhand_samadhan_backend
+    restart: always
+    environment:
+      - ENVIRONMENT=production
+      - AI_MODE=mock
+      - DATABASE_URL=sqlite:///./jharkhand_samadhan.db
+      - JWT_SECRET=jharkhand_sih_2026_super_secret_jwt_key_998877
+    volumes:
+      - ./uploads:/app/uploads
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    container_name: jharkhand_samadhan_frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
